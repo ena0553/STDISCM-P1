@@ -2,26 +2,21 @@
 #include <thread>
 #include <chrono>
 #include <cmath>
-#include <ctime>
-#include <vector>
-#include <iomanip>
-#include <fstream>
-#include <future>
 
 using namespace std;
 
-vector<int> checkPrime(int start, int end){
 
-    vector<int> primes;
+void checkPrime(int start, int end){
 
     for(int i = start;  i < end + 1; i++){
         int prime = 1;
 
-        if(i %2 == 0 && i !=2){
+        
+        if (floor(sqrt(i)) == sqrt(i)){
             prime = 0;
         }
         else{
-            for(int j = 3 ; j*j <= (i) ; j+=2){
+            for(int j = 2 ; j*j < (i) ; j++){
                 if(i % j == 0){
                     prime = 0;
                     break;
@@ -30,71 +25,46 @@ vector<int> checkPrime(int start, int end){
         }
 
         if(prime){
-            primes.push_back(i);
+            cout << i << ", ";
         }
     }
 
-    return primes;
-}
-
-void timestamp(){
-    auto now = chrono::system_clock::now();
-    time_t now_c = chrono::system_clock::to_time_t(now);
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-    std::tm* local_tm = std::localtime(&now_c);
-    std::cout << std::put_time(local_tm, "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count()<< std::endl;
 
 }
 
 int main() {
-    int nThreads;
-    int number;
 
-    std::ifstream file("config.txt");
-    string line;
-    while(file >> line)
-    {
-        if(line == "num-threads"){
-            file >> nThreads;
-        }
-        else if(line == "y-number"){
-            file >> number;
-        }
-    }
+    auto start = chrono::high_resolution_clock::now();
+
+    int nThreads = 4;
+    int number = 10000;
 
     int division = number/nThreads;
+    
+    //for (int i = 0 ; i < nThreads ; i++){}
 
-    timestamp();
-
-    vector<future<vector<int>>> workers;
-
-    for(int i = 0 ; i < nThreads ; i++){
-
-        int startInterval = 2 + i * division;
-        
-        int endInterval;
-
-        if(i == nThreads-1){
-            endInterval = number;
+    for (int i = 2; i < number ; i++){
+        if( i %2 == 1 && i != 2){
+            
         }
-        else{
-            endInterval = startInterval + division - 1;
-        }
-
-        workers.push_back(async(launch::async, checkPrime, startInterval, endInterval));
-
     }
 
-    vector<vector<int>> results;
-    for (auto& w : workers) results.push_back(w.get());
+    /*
+    thread t1(checkPrime, 2, division);
+    thread t2(checkPrime, division + 1, division*2);
+    thread t3(checkPrime, (division*2)+1, division *3);
+    thread t4(checkPrime, (division*3) + 1, number);
+    */
 
-    for (const auto& r : results)
-        for (int p : r)
-            cout << p << ", ";
-            
-    cout << endl;
-    timestamp();
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+    cout << "\nTime: " << duration.count() << " microseconds";
+
 
     return 0;
-
 }
