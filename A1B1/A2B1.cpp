@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <fstream>
 #include <future>
+#include <sstream>
+
 
 using namespace std;
 
@@ -37,13 +39,16 @@ vector<int> checkPrime(int start, int end){
     return primes;
 }
 
-void timestamp(){
+string timestamp(){
     auto now = chrono::system_clock::now();
     time_t now_c = chrono::system_clock::to_time_t(now);
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
     std::tm* local_tm = std::localtime(&now_c);
-    std::cout << std::put_time(local_tm, "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count()<< std::endl;
+    ostringstream oss;
+    oss << std::put_time(local_tm, "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count();
+    string timestamp = oss.str();
 
+    return timestamp;
 }
 
 int main() {
@@ -64,7 +69,7 @@ int main() {
 
     int division = number/nThreads;
 
-    timestamp();
+    cout << "Start time: " << timestamp() << endl;
 
     vector<future<vector<int>>> workers;
 
@@ -93,7 +98,7 @@ int main() {
             cout << p << ", ";
             
     cout << endl;
-    timestamp();
+    cout << "End time: " << timestamp() << endl;
 
     return 0;
 

@@ -64,7 +64,7 @@ int main() {
         }
     }
 
-    cout << timestamp();
+    cout << "Start time: " << timestamp() << endl;
 
     int division = number/nThreads;
 
@@ -89,7 +89,7 @@ int main() {
     for (auto& w : workers) w.join();
 
     cout << endl;
-    cout << timestamp();
+    cout << "End time: " << timestamp() << endl;
 
     return 0;
 }
