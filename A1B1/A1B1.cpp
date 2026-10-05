@@ -40,7 +40,7 @@ void checkPrime(int start, int end, int threadID){
         }
 
         if(prime){
-            cout << endl << "Thread ID: " << threadID << " Prime: " << i << " " << timestamp() << endl;
+            cout << endl << "Thread ID:" << threadID << " Prime:" << i << " " << timestamp();
         }
     }
 
@@ -64,9 +64,14 @@ int main() {
         }
     }
 
+    string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
 
     int division = number/nThreads;
+
+    if(nThreads > number){
+        division = nThreads;
+    }
 
     vector<thread> workers;
 
@@ -89,6 +94,8 @@ int main() {
     for (auto& w : workers) w.join();
 
     cout << endl;
+    
+    cout << startTime << endl;
     cout << "End time: " << timestamp() << endl;
 
     return 0;

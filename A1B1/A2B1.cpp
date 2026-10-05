@@ -69,6 +69,7 @@ int main() {
 
     int division = number/nThreads;
 
+    string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
 
     vector<future<vector<int>>> workers;
@@ -98,6 +99,7 @@ int main() {
             cout << p << ", ";
             
     cout << endl;
+    cout << startTime << endl;
     cout << "End time: " << timestamp() << endl;
 
     return 0;
