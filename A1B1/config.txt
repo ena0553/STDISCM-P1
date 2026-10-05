@@ -1,0 +1,2 @@
+num-threads 12
+y-number 100

@@ -1,2 +1,0 @@
-num-threads 4
-y-number 140
