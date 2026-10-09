@@ -30,6 +30,7 @@ void checkPrime(int start, int end, int threadID){
         if(i %2 == 0 && i !=2){
             prime = 0;
         }
+
         else{
             for(int j = 3 ; j*j <= (i) ; j+=2){
                 if(i % j == 0){
@@ -38,7 +39,7 @@ void checkPrime(int start, int end, int threadID){
                 }
             }
         }
-
+        
         if(prime){
             cout << endl << "Thread ID:" << threadID << " Prime:" << i << " " << timestamp();
         }
@@ -68,18 +69,22 @@ int main() {
     cout << "Start time: " << timestamp() << endl;
     auto t0 = chrono::steady_clock::now();
 
+    int total = number - 1;
+    if(total < 1){
+        cout << "Enter a valid number in config.txt";
+        return 0;
+    }
 
-    int division = number/nThreads;
+    int chunks = min (total, nThreads);
+    int division = total/chunks;
 
     vector<thread> workers;
 
-    for(int i = 0 ; i < nThreads ; i++){
-
+    for(int i = 0 ; i < chunks ; i++){
         int startInterval = 2 + i * division;
-        
         int endInterval;
 
-        if(i == nThreads-1){
+        if(i == chunks-1){
             endInterval = number;
         }
         else{

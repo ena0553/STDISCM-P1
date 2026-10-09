@@ -1,2 +1,2 @@
-num-threads 1
+num-threads 8
 y-number 65536

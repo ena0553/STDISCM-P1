@@ -1,2 +1,2 @@
-num-threads 10
-y-number 500
+num-threads 8
+y-number 65536

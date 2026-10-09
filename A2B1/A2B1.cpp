@@ -67,7 +67,14 @@ int main() {
         }
     }
 
-    int division = number/nThreads;
+    int total = number - 1;
+    if(total < 1){
+        cout << "Enter a valid number in config.txt";
+        return 0;
+    }
+
+    int chunks = min (total, nThreads);
+    int division = total/chunks;
 
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
@@ -75,13 +82,13 @@ int main() {
 
     vector<future<vector<int>>> workers;
 
-    for(int i = 0 ; i < nThreads ; i++){
+    for(int i = 0 ; i < chunks ; i++){
 
         int startInterval = 2 + i * division;
         
         int endInterval;
 
-        if(i == nThreads-1){
+        if(i == chunks-1){
             endInterval = number;
         }
         else{
