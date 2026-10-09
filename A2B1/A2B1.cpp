@@ -61,12 +61,19 @@ int main() {
     {
         if(line == "num-threads"){
             file >> nThreads;
+            if (!(file >> nThreads)) {
+                cout << "nThreads must be between 1 and 2147483647" << endl;
+                return 0;
+            }
         }
         else if(line == "y-number"){
+            if (!(file >> number)) {
+                cout << "y-number must be between 1 and 2147483647" << endl;
+                return 0;
+            }
             file >> number;
         }
     }
-
     int total = number - 1;
     if(total < 1){
         cout << "Enter a valid number in config.txt";
@@ -104,7 +111,7 @@ int main() {
 
     for (const auto& r : results)
         for (int p : r)
-            cout << p << ", ";
+            cout << "Prime:" << p << endl;
             
     cout << endl;
     cout << startTime << endl;

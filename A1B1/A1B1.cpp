@@ -39,7 +39,7 @@ void checkPrime(int start, int end, int threadID){
                 }
             }
         }
-        
+
         if(prime){
             cout << endl << "Thread ID:" << threadID << " Prime:" << i << " " << timestamp();
         }
@@ -59,11 +59,20 @@ int main() {
     {
         if(line == "num-threads"){
             file >> nThreads;
+            if (!(file >> nThreads)) {
+                cout << "nThreads must be between 1 and 2147483647" << endl;
+                return 0;
+            }
         }
         else if(line == "y-number"){
+            if (!(file >> number)) {
+                cout << "y-number must be between 1 and 2147483647" << endl;
+                return 0;
+            }
             file >> number;
         }
     }
+
 
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;

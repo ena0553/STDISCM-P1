@@ -33,18 +33,14 @@ class ThreadPool {
                     workerId = (int)i;
                     while(true) {
                         function<void()> task;
-
                         {
                             unique_lock<mutex> lock(queue_mutex);
-
                             cv.wait(lock, [this]{
                                 return !tasks.empty() || stop;
                             });
-
                             if (stop && tasks.empty()){
                                 return;
                             }
-                            
                             task = move(tasks.front());
                             tasks.pop();
                         }
@@ -79,13 +75,9 @@ class ThreadPool {
     
     private:
         vector<thread> threads;
-
         queue<function<void()>> tasks;
-
         mutex queue_mutex;
-
         condition_variable cv;
-
         bool stop = false;
 };
 
@@ -106,11 +98,9 @@ void checkPrime(int checking, ThreadPool& pool){
     for(long long j = 3 ; j*j <= checking ; j+=2){
         countDivs++;
     }
-
     if(countDivs == 0){
         return;
     }
-
     auto job = make_shared<Job>(checking, countDivs);
 
     for(long long j = 3 ; j*j <= checking ; j += 2){
@@ -120,7 +110,8 @@ void checkPrime(int checking, ThreadPool& pool){
             }
 
             if(--job->remainingTasks == 0 && !job->composite){
-                cout << "Thread ID:" << workerId << " Prime:" << job->n << " " << timestamp() << endl;
+                cout << "Thread ID:" << workerId << " Prime:"
+                 << job->n << " " << timestamp() << endl;
             }
         });
     }
@@ -137,12 +128,19 @@ int main() {
     {
         if(line == "num-threads"){
             file >> nThreads;
+            if (!(file >> nThreads)) {
+                cout << "nThreads must be between 1 and 2147483647" << endl;
+                return 0;
+            }
         }
         else if(line == "y-number"){
+            if (!(file >> number)) {
+                cout << "y-number must be between 1 and 2147483647" << endl;
+                return 0;
+            }
             file >> number;
         }
     }
-
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
     auto t0 = chrono::steady_clock::now(); 
