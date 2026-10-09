@@ -1,0 +1,2 @@
+num-threads 10
+y-number 500

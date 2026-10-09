@@ -49,8 +49,8 @@ void checkPrime(int start, int end, int threadID){
 
 int main() {
 
-    int nThreads;
-    int number;
+    int nThreads = 4;
+    int number = 100;
 
     std::ifstream file("config.txt");
     string line;
@@ -66,12 +66,10 @@ int main() {
 
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
+    auto t0 = chrono::steady_clock::now();
+
 
     int division = number/nThreads;
-
-    if(nThreads > number){
-        division = nThreads;
-    }
 
     vector<thread> workers;
 
@@ -97,6 +95,9 @@ int main() {
     
     cout << startTime << endl;
     cout << "End time: " << timestamp() << endl;
+    auto t1 = chrono::steady_clock::now();   
+    auto ms = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
+    cout << "Elapsed: " << ms << " ms" << endl;
 
     return 0;
 }

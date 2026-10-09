@@ -71,6 +71,7 @@ int main() {
 
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
+    auto t0 = chrono::steady_clock::now();  
 
     vector<future<vector<int>>> workers;
 
@@ -101,6 +102,9 @@ int main() {
     cout << endl;
     cout << startTime << endl;
     cout << "End time: " << timestamp() << endl;
+    auto t1 = chrono::steady_clock::now();
+    auto ms = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
+    cout << "Elapsed: " << ms << " ms" << endl;
 
     return 0;
 

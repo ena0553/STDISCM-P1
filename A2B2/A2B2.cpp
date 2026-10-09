@@ -101,26 +101,27 @@ string timestamp(){
     return timestamp;
 }
 
-void checkPrime(int checking, ThreadPool& pool){
+void checkPrime(int checking, ThreadPool& pool, vector<int>& results){
     int countDivs = 0;
     for(long long j = 3 ; j*j <= checking ; j+=2){
         countDivs++;
     }
 
     if(countDivs == 0){
+        results[checking] = 1;
         return;
     }
 
     auto job = make_shared<Job>(checking, countDivs);
 
     for(long long j = 3 ; j*j <= checking ; j += 2){
-        pool.enqueue([job, j] {
+        pool.enqueue([job, j, &results] {
             if(job->n % j == 0){
                 job->composite = true;
             }
 
             if(--job->remainingTasks == 0 && !job->composite){
-                cout << "Thread ID:" << workerId << " Prime:" << job->n << " " << timestamp() << endl;
+                results[job->n] = 1;
             }
         });
     }
@@ -145,21 +146,32 @@ int main() {
 
     string startTime = "Start time: " + timestamp() ;
     cout << "Start time: " << timestamp() << endl;
+    auto t0 = chrono::steady_clock::now();
 
+    vector<int> results(number + 1, 0);
     {
         ThreadPool pool(nThreads);
         for (int i = 2 ; i < number ; i++){
             if (!(i % 2 == 0) || (i == 2)){
-                checkPrime(i, pool);
+                checkPrime(i, pool, results);
             }
         }
         
     }
 
+    for (int i = 2 ; i <= number ; i++){
+        if(results[i]){
+            cout << "Prime:" << i << endl;
+        }
+    }
+
     cout << endl;
     cout << startTime << endl;
     cout << "End time: " << timestamp() << endl;
-
+    auto t1 = chrono::steady_clock::now();     
+    
+    auto ms = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
+    cout << "Elapsed: " << ms << " ms" << endl;
 
     return 0;
 }
